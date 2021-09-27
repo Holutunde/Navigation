@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -10,8 +10,8 @@ import DetailsScreen from './DetailsScreen';
 import ExploreScreen from './ExploreScreen';
 import ProfileScreen from './ProfileScreen';
 
-const HomeStack = createStackNavigator();
-const DetailsStack = createStackNavigator();
+const HomeStack = createNativeStackNavigator();
+const DetailsStack = createNativeStackNavigator();
 
 const Tab = createMaterialBottomTabNavigator();
 
