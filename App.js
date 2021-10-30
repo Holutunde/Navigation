@@ -134,8 +134,7 @@ const App = () => {
         dispatch(logout())
       },
       signUp: () => {
-        // setUserToken('fgkj');
-        // setIsLoading(false);
+      
       },
       toggleTheme: () => {
         setIsDarkTheme((isDarkTheme) => !isDarkTheme)
