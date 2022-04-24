@@ -15,17 +15,16 @@ import {
 
 import { DrawerContent } from './screens/DrawerContent'
 
-import Tab from './navigation/Tab'
+import MainTabScreen from './screens/MainTabScreen'
 import SupportScreen from './screens/SupportScreen'
 import SettingsScreen from './screens/SettingsScreen'
 import BookmarkScreen from './screens/BookmarkScreen'
-import { useDispatch, useSelector, Provider } from 'react-redux'
+
 import { AuthContext } from './components/context'
 
 import RootStackScreen from './screens/RootStackScreen'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import Store from './store/index'
 
 const Drawer = createDrawerNavigator()
 
@@ -35,16 +34,11 @@ const App = () => {
 
   const [isDarkTheme, setIsDarkTheme] = React.useState(false)
 
-  const { isloading, username, usertoken } = useSelector(
-    (state) => state.userReducer,
-  )
-  const dispatch = useDispatch()
-
-  // const initialLoginState = {
-  //   isLoading: true,
-  //   userName: null,
-  //   userToken: null,
-  // }
+  const initialLoginState = {
+    isLoading: true,
+    userName: null,
+    userToken: null,
+  }
 
   const CustomDefaultTheme = {
     ...NavigationDefaultTheme,
@@ -70,42 +64,42 @@ const App = () => {
 
   const theme = isDarkTheme ? CustomDarkTheme : CustomDefaultTheme
 
-  // const loginReducer = (prevState, action) => {
-  //   switch (action.type) {
-  //     case 'RETRIEVE_TOKEN':
-  //       return {
-  //         ...prevState,
-  //         userToken: action.token,
-  //         isLoading: false,
-  //       }
-  //     case 'LOGIN':
-  //       return {
-  //         ...prevState,
-  //         userName: action.id,
-  //         userToken: action.token,
-  //         isLoading: false,
-  //       }
-  //     case 'LOGOUT':
-  //       return {
-  //         ...prevState,
-  //         userName: null,
-  //         userToken: null,
-  //         isLoading: false,
-  //       }
-  //     case 'REGISTER':
-  //       return {
-  //         ...prevState,
-  //         userName: action.id,
-  //         userToken: action.token,
-  //         isLoading: false,
-  //       }
-  //   }
-  // }
+  const loginReducer = (prevState, action) => {
+    switch (action.type) {
+      case 'RETRIEVE_TOKEN':
+        return {
+          ...prevState,
+          userToken: action.token,
+          isLoading: false,
+        }
+      case 'LOGIN':
+        return {
+          ...prevState,
+          userName: action.id,
+          userToken: action.token,
+          isLoading: false,
+        }
+      case 'LOGOUT':
+        return {
+          ...prevState,
+          userName: null,
+          userToken: null,
+          isLoading: false,
+        }
+      case 'REGISTER':
+        return {
+          ...prevState,
+          userName: action.id,
+          userToken: action.token,
+          isLoading: false,
+        }
+    }
+  }
 
-  // const [loginState, dispatch] = React.useReducer(
-  //   loginReducer,
-  //   initialLoginState,
-  // )
+  const [loginState, dispatch] = React.useReducer(
+    loginReducer,
+    initialLoginState,
+  )
 
   const authContext = React.useMemo(
     () => ({
@@ -121,7 +115,7 @@ const App = () => {
           console.log(e)
         }
         // console.log('user token: ', userToken);
-        dispatch(login(userName, userToken))
+        dispatch({ type: 'LOGIN', id: userName, token: userToken })
       },
       signOut: async () => {
         // setUserToken(null);
@@ -131,10 +125,11 @@ const App = () => {
         } catch (e) {
           console.log(e)
         }
-        dispatch(logout())
+        dispatch({ type: 'LOGOUT' })
       },
       signUp: () => {
-      
+        // setUserToken('fgkj');
+        // setIsLoading(false);
       },
       toggleTheme: () => {
         setIsDarkTheme((isDarkTheme) => !isDarkTheme)
@@ -147,16 +142,14 @@ const App = () => {
     setTimeout(async () => {
       // setIsLoading(false);
       let userToken
-      //first the userToken is null
       userToken = null
       try {
-        //when the try complete, the  userToken is updated
         userToken = await AsyncStorage.getItem('userToken')
       } catch (e) {
         console.log(e)
       }
       // console.log('user token: ', userToken);
-      dispatch(retrieve_token(userToken))
+      dispatch({ type: 'RETRIEVE_TOKEN', token: userToken })
     }, 1000)
   }, [])
 
@@ -168,25 +161,24 @@ const App = () => {
     )
   }
   return (
-    <Provider store={Store}>
-      <NavigationContainer theme={theme}>
-        {loginState.userToken !== null ? (
-          <Drawer.Navigator
-            screenOptions={{
-              headerShown: false,
-            }}
-            drawerContent={(props) => <DrawerContent {...props} />}
-          >
-            <Drawer.Screen name="HomeDrawer" component={Tab} />
-            <Drawer.Screen name="SupportScreen" component={SupportScreen} />
-            <Drawer.Screen name="SettingsScreen" component={SettingsScreen} />
-            <Drawer.Screen name="BookmarkScreen" component={BookmarkScreen} />
-          </Drawer.Navigator>
-        ) : (
-          <RootStackScreen />
-        )}
-      </NavigationContainer>
-    </Provider>
+    <PaperProvider theme={theme}>
+      <AuthContext.Provider value={authContext}>
+        <NavigationContainer theme={theme}>
+          {loginState.userToken !== null ? (
+            <Drawer.Navigator
+              drawerContent={(props) => <DrawerContent {...props} />}
+            >
+              <Drawer.Screen name="HomeDrawer" component={MainTabScreen} />
+              <Drawer.Screen name="SupportScreen" component={SupportScreen} />
+              <Drawer.Screen name="SettingsScreen" component={SettingsScreen} />
+              <Drawer.Screen name="BookmarkScreen" component={BookmarkScreen} />
+            </Drawer.Navigator>
+          ) : (
+            <RootStackScreen />
+          )}
+        </NavigationContainer>
+      </AuthContext.Provider>
+    </PaperProvider>
   )
 }
 
