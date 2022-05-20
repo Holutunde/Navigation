@@ -161,7 +161,7 @@ const App = () => {
               drawerContent={(props) => <DrawerContent {...props} />}
             >
               <Drawer.Screen
-                name="HomeDrawer"
+                name="HomeDraw"
                 component={MainTabScreen}
                 options={{ headerShown: false }}
               />
