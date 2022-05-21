@@ -105,7 +105,7 @@ const ProfileScreen = () => {
         </TouchableRipple>
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
-            <Icon name="settings-outline" color="#FF6347" size={25} />
+            <Icon name="cog-outline" color="#FF6347" size={25} />
             <Text style={styles.menuItemText}>Settings</Text>
           </View>
         </TouchableRipple>
