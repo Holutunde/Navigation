@@ -21,7 +21,7 @@ const Tab = createMaterialBottomTabNavigator()
 const MainTabScreen = () => (
   <Tab.Navigator initialRouteName="Home" activeColor="#fff">
     <Tab.Screen
-      name="Home"
+      name="HomeStack"
       component={HomeStackScreen}
       options={{
         tabBarLabel: 'Home',
@@ -83,10 +83,10 @@ const HomeStackScreen = ({ navigation }) => (
     }}
   >
     <HomeStack.Screen
-      name="Home"
+      name="HomeScreen"
       component={HomeScreen}
       options={{
-        title: 'Overview',
+        title: 'Home',
         headerLeft: () => (
           <Icon.Button
             name="ios-menu"
