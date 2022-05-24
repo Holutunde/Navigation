@@ -87,7 +87,7 @@ const EditProfileScreen = () => {
                 source={{
                   uri: 'https://api.adorable.io/avatars/80/abott@adorable.png',
                 }}
-                size={80}
+                size={70}
                 style={{ height: 100, width: 100 }}
                 imageStyle={{ borderRadius: 15 }}
               >
